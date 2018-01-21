@@ -1,0 +1,5 @@
+* installed cython and kivy -- didn't work
+
+* installed matplotlib and wxpython
+
+* decided to go back to using tkinter

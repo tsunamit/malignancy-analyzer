@@ -30,6 +30,7 @@ closeK = 25
 threshVal = 25
 
 # load images to vars here. 0 is the gray mask
+# 7 not good
 img_main = cv.imread('img/test.tif')
 img_main = cv.cvtColor(img_main, cv.COLOR_RGB2GRAY)
 orig = img_main.copy()
@@ -47,6 +48,9 @@ dst1 = cvt.Close(dst, closeK)
 
 # global threshold
 dst2 = cvt.Thresh(dst1, threshVal)
+
+# test close
+dst2 = cvt.Close(dst2, 50)
 
 # floodfill
 dst3 = cvt.ImFill(dst2)

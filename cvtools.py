@@ -104,9 +104,63 @@ class CVTools:
 
 
         #------------------------------------
+        # TESTING: draw the centroid
+
+        for c in self.__GetCentroid(contours):
+
+            # draw all the centroids as circles
+            # c is the tuple which is the location of the centroid
+
+            cv.circle(dst, c, 25, (0, 0, 255), -1)
+            # cv.putText(dst, "center", (c[0] - 20, c[1] - 20), cv.FONT_HERSHEY_SIMPLEX, 6, (255, 0, 0), 10)
+
+
+        #------------------------------------
 
 
         # draws the contours found from the processed image onto the original image to display
         cv.drawContours(dst, contours, -1, (128,255,0), 10)
 
         return dst
+
+    '''
+    Get Centroid
+    -----------------------------------------------------------
+    Given a set of contours. Go through each one and return the location of
+    where the centroid should be. We will draw this centroid later. 
+    '''
+    def __GetCentroid(self, contours):
+
+        centroids = []
+
+        # loop through the given contours
+        for c in contours:
+            # get center of contours using the moments
+            moments = cv.moments(c)
+
+            if moments["m00"] != 0:
+                cX = int(moments["m10"] / moments["m00"])
+                cY = int(moments["m01"] / moments["m00"])
+            else:
+                cX, cY = 0, 0
+
+            centroids.append((cX, cY))
+
+        return centroids
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

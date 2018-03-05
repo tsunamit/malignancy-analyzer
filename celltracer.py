@@ -30,8 +30,8 @@ closeK = 25
 threshVal = 25
 
 # load images to vars here. 0 is the gray mask
-# 7 not good
-img_main = cv.imread('img/test.tif')
+# test (invasive cell), 6 (complicated), 3 (perfect)
+img_main = cv.imread('img/9.tif')
 img_main = cv.cvtColor(img_main, cv.COLOR_RGB2GRAY)
 orig = img_main.copy()
 
@@ -67,7 +67,10 @@ trace = cvt.GetTrace(dst3, img_main)
 # display images
 toDisplay = [orig, dst, dst1, dst2, dst3, trace]
 # TODO turn the other images into BGR so they don't look terrible
-d.small_grid(toDisplay)
+# HACK uncomment this line below!!!!!! 
+# d.small_grid(toDisplay)
+
+d.SingleView ("img", trace)
 
 
 '''

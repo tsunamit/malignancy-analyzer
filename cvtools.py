@@ -98,6 +98,7 @@ class CVTools:
 
         #------------------------------------
 
+
         
 
         
@@ -114,11 +115,13 @@ class CVTools:
             cv.circle(dst, c, 25, (0, 0, 255), -1)
             # cv.putText(dst, "center", (c[0] - 20, c[1] - 20), cv.FONT_HERSHEY_SIMPLEX, 6, (255, 0, 0), 10)
 
+            self.__DrawCircles(c, dst)
 
         #------------------------------------
 
 
         # draws the contours found from the processed image onto the original image to display
+        # HACK changed from draw all "-1" to "0" -> change back if need be
         cv.drawContours(dst, contours, -1, (128,255,0), 10)
 
         return dst
@@ -128,6 +131,7 @@ class CVTools:
     -----------------------------------------------------------
     Given a set of contours. Go through each one and return the location of
     where the centroid should be. We will draw this centroid later. 
+    Private
     '''
     def __GetCentroid(self, contours):
 
@@ -149,6 +153,23 @@ class CVTools:
         return centroids
 
 
+    '''
+    Draw Circles
+    -----------------------------------------------------------
+    Given a centroid, just draw a few circles with increasing radii. 
+    Private
+    '''
+    def __DrawCircles(self, centroid, dst):
+        # draw one circle with constant radius around centroid
+        for i in range (75, 300, 25):
+            cv.circle(dst, centroid, i, (0, 0, 255), 5)
+
+
+    '''
+    Get Largest Contour
+    -----------------------------------------------------------
+    Given a set of contours. Returns the contour with the largest area.
+    '''
 
 
 

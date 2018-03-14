@@ -31,7 +31,8 @@ threshVal = 25
 
 # load images to vars here. 0 is the gray mask
 # test (invasive cell), 6 (complicated), 3 (perfect)
-img_main = cv.imread('img/9.tif')
+# 10.tif is the confocal
+img_main = cv.imread('img/3.tif')
 img_main = cv.cvtColor(img_main, cv.COLOR_RGB2GRAY)
 orig = img_main.copy()
 

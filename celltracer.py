@@ -32,6 +32,7 @@ threshVal = 25
 # load images to vars here. 0 is the gray mask
 # test (invasive cell), 6 (complicated), 3 (perfect)
 # 10.tif is the confocal
+# TODO fix image 8. seems to not work well with this
 img_main = cv.imread('img/3.tif')
 img_main = cv.cvtColor(img_main, cv.COLOR_RGB2GRAY)
 orig = img_main.copy()
@@ -69,9 +70,9 @@ trace = cvt.GetTrace(dst3, img_main)
 toDisplay = [orig, dst, dst1, dst2, dst3, trace]
 # TODO turn the other images into BGR so they don't look terrible
 # HACK uncomment this line below!!!!!! 
-# d.small_grid(toDisplay)
+d.small_grid(toDisplay)
 
-d.SingleView ("img", trace)
+# d.SingleView ("img", trace)
 
 
 '''

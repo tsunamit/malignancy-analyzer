@@ -1,5 +1,6 @@
 import cv2 as cv
 import numpy as np
+import math
 
 '''
 CVTools 
@@ -106,16 +107,11 @@ class CVTools:
 
         #------------------------------------
         # TESTING: draw the centroid
-
-        for c in self.__GetCentroid(contours):
-
-            # draw all the centroids as circles
-            # c is the tuple which is the location of the centroid
-
-            cv.circle(dst, c, 25, (0, 0, 255), -1)
-            # cv.putText(dst, "center", (c[0] - 20, c[1] - 20), cv.FONT_HERSHEY_SIMPLEX, 6, (255, 0, 0), 10)
-
-            self.__DrawCircles(c, dst)
+        
+        # get largest contour, then draw the centroid of it
+        largest = self.GetLargestContour(contours)
+        self.DrawCentroid(dst, self.GetCentroid(contours[largest]))
+        print(self.GetShapeFactor(contours[largest]))
 
         #------------------------------------
 
@@ -126,6 +122,19 @@ class CVTools:
 
         return dst
 
+    ''' 
+    Draw Centroid
+    -----------------------------------------------------------
+    given a dst image and contour c, draw a dot at the centroid
+    ''' 
+    def DrawCentroid(self, dst, c):
+
+        # draw all the centroids as circles
+        # c is the tuple which is the location of the centroid
+
+        cv.circle(dst, c, 25, (0, 0, 255), -1)
+        # cv.putText(dst, "center", (c[0] - 20, c[1] - 20), cv.FONT_HERSHEY_SIMPLEX, 6, (255, 0, 0), 10)
+
     '''
     Get Centroid
     -----------------------------------------------------------
@@ -133,24 +142,32 @@ class CVTools:
     where the centroid should be. We will draw this centroid later. 
     Private
     '''
-    def __GetCentroid(self, contours):
 
-        centroids = []
+    def GetCentroid(self, c):
+        # get center of contour using the moments
+        # moments are specified by the string
+        moments = cv.moments(c)
 
-        # loop through the given contours
-        for c in contours:
-            # get center of contours using the moments
-            moments = cv.moments(c)
+        if moments["m00"] != 0:
+            cX = int(moments["m10"] / moments["m00"])
+            cY = int(moments["m01"] / moments["m00"])
+        else:
+            cX, cY = 0, 0
 
-            if moments["m00"] != 0:
-                cX = int(moments["m10"] / moments["m00"])
-                cY = int(moments["m01"] / moments["m00"])
-            else:
-                cX, cY = 0, 0
+        return (cX, cY)
 
-            centroids.append((cX, cY))
 
-        return centroids
+    '''
+    Get Ellipse Vertices
+    -----------------------------------------------------------
+    Given a centroid, calculate points on an ellipse of a particular radii
+    Private
+    '''
+    #def GetEllipseVertices(self, img, centroid):
+        # want to use ellipse2poly method
+        # for a circle make sure the size parameter is (height, width) where h = w
+        
+
 
 
     '''
@@ -159,7 +176,7 @@ class CVTools:
     Given a centroid, just draw a few circles with increasing radii. 
     Private
     '''
-    def __DrawCircles(self, centroid, dst):
+    def DrawCircles(self, centroid, dst):
         # draw one circle with constant radius around centroid
         for i in range (75, 300, 25):
             cv.circle(dst, centroid, i, (0, 0, 255), 5)
@@ -170,10 +187,32 @@ class CVTools:
     -----------------------------------------------------------
     Given a set of contours. Returns the contour with the largest area.
     '''
+    def GetLargestContour(self, contours):
+        largest = 0
+
+        print(len(contours))
+
+        for i in range(len(contours)):
+            # compare to the largest contour, and make sure that we don't accidentally grab the whole box!
+            if (cv.contourArea(contours[i]) > cv.contourArea(contours[largest]) and cv.contourArea(contours[i]) < 4000000):
+                largest = i
+
+        # returns largest contours
+        return largest
 
 
+    '''
+    Get Shape Factor
+    -----------------------------------------------------------
+    Given a contour, return shape factor
+    '''
+    def GetShapeFactor (self, c):
+        # 4(pi)(Area)/(Perimeter)^2
+        a = cv.contourArea(c)
+        p = cv.arcLength(c, True)
+        print (a)
 
-
+        return (4 * (math.pi) * a / math.pow(p, 2) )
 
 
 

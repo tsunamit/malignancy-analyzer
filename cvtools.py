@@ -82,17 +82,29 @@ class CVTools:
         im_out = img | im_floodfillinv
         return im_out
 
+
+    '''
+    Get Contours
+    -----------------------------------------------------------
+    For the processed image, return the list of contours found
+    '''
+    def GetContours(self, procimg):
+        # finds all the contours, currently without using Canny edge detection. Uses RETR Tree hierarchy
+        edge, contours, hierarchy = cv.findContours(procimg, cv.RETR_TREE, cv.CHAIN_APPROX_SIMPLE)
+        return contours
     
     '''
-    Get Trace
+    Visaulize Features
     -----------------------------------------------------------
     OpenCV Find contours method to trace the outline of the cell
     procimg: the processed image ready for contour searching
     dst: the image for the contours to be overlayed on
+
+    Also draws the centroids and concentric circles that we use to collect data
     '''
-    def GetTrace(self, procimg, dst):
-        # finds all the contours, currently without using Canny edge detection. Uses RETR Tree hierarchy
-        edge, contours, hierarchy = cv.findContours(procimg, cv.RETR_TREE, cv.CHAIN_APPROX_SIMPLE)
+    def VisualizeFeatures(self, procimg, dst, startRadius, maxRadius, radiusStep):
+        
+        contours = self.GetContours(procimg)
 
         # converts the main image from GRAY to RGB colorspace
         dst = cv.cvtColor(dst, cv.COLOR_GRAY2RGB)
@@ -106,18 +118,16 @@ class CVTools:
 
 
         #------------------------------------
-        # TESTING: draw the centroid
-        
-        # get largest contour, then draw the centroid of it
-        largest = self.GetLargestContour(contours)
-        self.DrawCentroid(dst, self.GetCentroid(contours[largest]))
-        print(self.GetShapeFactor(contours[largest]))
 
+            # theoretical next steps:
+            # for each of these points, tell me if there is light in this or not.vertices
+            #   now be careful, the background could definitely be light, where we probably would have to verify that there actually is something here
+            # TODO need to make sure we aren't trying to get values for data that is out of bounds
+            # TODO make sure that we aren't drawing (1) contour or (2) centroid or (3) circles until the analysis is finished. Otherwise data will obviously contain that crap
         #------------------------------------
 
 
         # draws the contours found from the processed image onto the original image to display
-        # HACK changed from draw all "-1" to "0" -> change back if need be
         cv.drawContours(dst, contours, -1, (128,255,0), 10)
 
         return dst
@@ -163,23 +173,59 @@ class CVTools:
     Given a centroid, calculate points on an ellipse of a particular radii
     Private
     '''
-    #def GetEllipseVertices(self, img, centroid):
+    def GetEllipseVertices(self, img, centroid, radius):
         # want to use ellipse2poly method
         # for a circle make sure the size parameter is (height, width) where h = w
-        
+        axes = (radius, radius) # the size of the first and second axes of the ellipse... h = w for a circle
+        angleOfRot = 0          # angle of rotation: rotation off the central (vertical) axis of the ellipse
+        startAngle = 0          # start angle of the points -> typically 0 
+        endAngle = 360          # end angle of the points -> typically 360
+        delta = 1               # the interpolation accuracy of the checks. We check every single angle for this
+
+        # get the set of points
+        vertices = cv.ellipse2Poly(centroid, axes, angleOfRot, startAngle, endAngle, delta) 
+
+        return vertices
 
 
 
     '''
-    Draw Circles
+    Get And Draw Ellipse Data
     -----------------------------------------------------------
-    Given a centroid, just draw a few circles with increasing radii. 
-    Private
+    Given a centroid, gets the ellipse data for a fixed number of rings with increasing radii.
+    At the points where data is taken, we draw a circle (although we should try just drawing dots)
     '''
-    def DrawCircles(self, centroid, dst):
+    def GetAndDrawEllipseData(self, dst, origimg, centroid, startRadius, maxRadius, radiusStepSize):
         # draw one circle with constant radius around centroid
-        for i in range (75, 300, 25):
-            cv.circle(dst, centroid, i, (0, 0, 255), 5)
+
+        # dst: image that circles will be drawn on top of
+        # origimg: original image to grab light data from
+        # startradius: first radius drawn
+        # maxradius: maximum radius drawn
+        # radiusStepSize: step size inbetween radii
+
+
+        lineColor = (0, 0, 255)
+        thickness = 5
+
+        # i is the radius of the current circle being drawn
+        for i in range (startRadius, maxRadius, radiusStepSize):
+            
+            # draw ellipse
+            cv.circle(dst, centroid, i, lineColor, thickness)
+
+            # collect ellipse data
+            vertices = self.GetEllipseVertices(origimg, centroid, i)
+
+            # for each datapoint , want to get the intensity of the color at that pixel point
+            for pixel in range (len(vertices)):
+                # HACK UNDONE get intensity of pixel here! 
+                intensity = origimg.at
+
+
+            print("vertices collected at radius" + str(i) + "\t" + "vertex set size: " + str(len(vertices)))
+
+
 
 
     '''

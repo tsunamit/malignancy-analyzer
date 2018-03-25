@@ -33,9 +33,11 @@ threshVal = 25
 # test (invasive cell), 6 (complicated), 3 (perfect)
 # 10.tif is the confocal
 # TODO fix image 8. seems to not work well with this
-img_main = cv.imread('img/3.tif')
+img_main = cv.imread('img/6.tif')
 img_main = cv.cvtColor(img_main, cv.COLOR_RGB2GRAY)
 orig = img_main.copy()
+# original image to draw on
+origDraw = img_main.copy()
 
 '''
 //////////////////////////////////////
@@ -57,8 +59,66 @@ dst2 = cvt.Close(dst2, 50)
 # floodfill
 dst3 = cvt.ImFill(dst2)
 
+
+
+'''
+//////////////////////////////////////
+// Data Collection and Drawing
+//////////////////////////////////////
+'''
+startRadius = 0
+maxRadius = 1000
+radiusStep = 25
+
+# Data to collect
+'''
+* contour data ? this already gets collected though
+* light data at the specified points... make sure you handle background at some point
+'''
+
+# get contours, largest contour index, and the largest contour centroid
+imgContours = cvt.GetContours(dst3)
+largestContourIndex = cvt.GetLargestContour(imgContours)
+largestContourCentroid = cvt.GetCentroid(imgContours[largestContourIndex])
+
+# HACK start moving stuff into this main file... move find contours, get largest contour, and data collection here.
+cvt.GetAndDrawEllipseData(origDraw, orig, largestContourCentroid, startRadius, maxRadius, radiusStep)
+
+
+
+# Data to draw
+'''
+* trace cell contours
+* draw centroid
+* draw concentric circles
+'''
+
+
+
+
+# TESTING: draw the centroid
+'''    
+# get largest contour, then draw the centroid of it
+largest = self.GetLargestContour(contours)
+largestCentroid = self.GetCentroid(contours[largest])
+self.DrawCentroid(dst, largestCentroid)
+print(self.GetShapeFactor(contours[largest]))
+
+# prints out vertices collected the specifies checkradius
+# draws at the specified radius too...
+startRadius = 0
+maxRadius = 1000
+radiusStep = 25
+self.GetEllipseData(dst, procimg, largestCentroid, startRadius, maxRadius, radiusStep)
+'''
+
+
+
 # trace the cell contours
-trace = cvt.GetTrace(dst3, img_main)
+
+# NOTE: dst3 is the last processed image
+trace = cvt.VisualizeFeatures(dst3, origDraw, startRadius, maxRadius, radiusStep)
+
 
 
 '''
@@ -68,10 +128,8 @@ trace = cvt.GetTrace(dst3, img_main)
 '''
 # display images
 toDisplay = [orig, dst, dst1, dst2, dst3, trace]
-# TODO turn the other images into BGR so they don't look terrible
-# HACK uncomment this line below!!!!!! 
+# TODO turn the other images into BGR so they don't look terrible\
 d.small_grid(toDisplay)
-
 # d.SingleView ("img", trace)
 
 

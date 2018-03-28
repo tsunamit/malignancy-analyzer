@@ -104,18 +104,13 @@ class CVTools:
     '''
     def VisualizeFeatures(self, procimg, dst, startRadius, maxRadius, radiusStep):
         
+        # get contour list
         contours = self.GetContours(procimg)
 
         # converts the main image from GRAY to RGB colorspace
         dst = cv.cvtColor(dst, cv.COLOR_GRAY2RGB)
 
         #------------------------------------
-
-
-        
-
-        
-
 
         #------------------------------------
 
@@ -167,66 +162,6 @@ class CVTools:
         return (cX, cY)
 
 
-    '''
-    Get Ellipse Vertices
-    -----------------------------------------------------------
-    Given a centroid, calculate points on an ellipse of a particular radii
-    Private
-    '''
-    def GetEllipseVertices(self, img, centroid, radius):
-        # want to use ellipse2poly method
-        # for a circle make sure the size parameter is (height, width) where h = w
-        axes = (radius, radius) # the size of the first and second axes of the ellipse... h = w for a circle
-        angleOfRot = 0          # angle of rotation: rotation off the central (vertical) axis of the ellipse
-        startAngle = 0          # start angle of the points -> typically 0 
-        endAngle = 360          # end angle of the points -> typically 360
-        delta = 1               # the interpolation accuracy of the checks. We check every single angle for this
-
-        # get the set of points
-        vertices = cv.ellipse2Poly(centroid, axes, angleOfRot, startAngle, endAngle, delta) 
-
-        return vertices
-
-
-
-    '''
-    Get And Draw Ellipse Data
-    -----------------------------------------------------------
-    Given a centroid, gets the ellipse data for a fixed number of rings with increasing radii.
-    At the points where data is taken, we draw a circle (although we should try just drawing dots)
-    '''
-    def GetAndDrawEllipseData(self, dst, origimg, centroid, startRadius, maxRadius, radiusStepSize):
-        # draw one circle with constant radius around centroid
-
-        # dst: image that circles will be drawn on top of
-        # origimg: original image to grab light data from
-        # startradius: first radius drawn
-        # maxradius: maximum radius drawn
-        # radiusStepSize: step size inbetween radii
-
-
-        lineColor = (0, 0, 255)
-        thickness = 5
-
-        # i is the radius of the current circle being drawn
-        for i in range (startRadius, maxRadius, radiusStepSize):
-            
-            # draw ellipse
-            cv.circle(dst, centroid, i, lineColor, thickness)
-
-            # collect ellipse data
-            vertices = self.GetEllipseVertices(origimg, centroid, i)
-
-            # for each datapoint , want to get the intensity of the color at that pixel point
-            for pixel in range (len(vertices)):
-                # HACK UNDONE get intensity of pixel here! 
-                intensity = origimg.at
-
-
-            print("vertices collected at radius" + str(i) + "\t" + "vertex set size: " + str(len(vertices)))
-
-
-
 
     '''
     Get Largest Contour
@@ -260,6 +195,93 @@ class CVTools:
 
         return (4 * (math.pi) * a / math.pow(p, 2) )
 
+
+'''
+//////////////////////////////////////
+// Unused Methods
+//////////////////////////////////////
+'''
+
+
+    '''
+    Get Ellipse Vertices
+    -----------------------------------------------------------
+    Given a centroid, calculate points on an ellipse of a particular radii
+    Private
+    '''
+    def GetEllipseVertices(self, img, centroid, radius):
+        # want to use ellipse2poly method
+        # for a circle make sure the size parameter is (height, width) where h = w
+        axes = (radius, radius) # the size of the first and second axes of the ellipse... h = w for a circle
+        angleOfRot = 0          # angle of rotation: rotation off the central (vertical) axis of the ellipse
+        startAngle = 0          # start angle of the points -> typically 0 
+        endAngle = 360          # end angle of the points -> typically 360
+        delta = 1               # the interpolation accuracy of the checks. We check every single angle for this
+
+        # get the set of points
+        vertices = cv.ellipse2Poly(centroid, axes, angleOfRot, startAngle, endAngle, delta) 
+
+        return vertices
+
+
+
+    '''
+    Get And Draw Ellipse Data [UNDONE] No longer using this method....
+    -----------------------------------------------------------
+    Given a centroid, gets the ellipse data for a fixed number of rings with increasing radii.
+    At the points where data is taken, we draw a circle (although we should try just drawing dots)
+    '''
+    def GetAndDrawEllipseData(self, log, dst, origimg, centroid, startRadius, maxRadius, radiusStepSize):
+        # draw one circle with constant radius around centroid
+
+        # dst: image that circles will be drawn on top of
+        # origimg: original image to grab light data from
+        # startradius: first radius drawn
+        # maxradius: maximum radius drawn
+        # radiusStepSize: step size inbetween radii
+
+
+        lineColor = (0, 0, 255)
+        thickness = 5
+
+        # get bounds of the image
+        xBound = origimg.shape[0]   # rows
+        yBound = origimg.shape[1]   # cols
+
+
+        # i is the radius of the current circle being drawn
+        for i in range (startRadius, maxRadius, radiusStepSize):
+            
+            # draw ellipse
+            cv.circle(dst, centroid, i, lineColor, thickness)
+
+            # collect ellipse data
+            vertices = self.GetEllipseVertices(origimg, centroid, i)
+
+            # for each datapoint in the circle we just identified , want to get the intensity of the color at that pixel point
+            pixels = []
+            isInBounds = True
+            
+            # for each point in the set of vertices, if in bounds of image, get the pixel intensity
+            for j in range (len(vertices)):
+                # if calculated vertex is out of bounds (x or y component)
+                if (vertices[j][0] >= xBound or vertices[j][1] >= yBound):
+                    print("OUT OF BOUNDS!")
+                    isInBounds = False
+                    # stop iterating through this vertex set
+                    break
+                else: 
+                    pixels.append(origimg[vertices[j][0], vertices[j][1]])
+                    # NOTE: two lines below get the pixel at position specified and prints to a log file
+                    # pixel = origimg[vertices[j][0], vertices[j][1]]
+                    # log.write("(" + str(vertices[j][0]) + ", " + str(vertices[j][1]) + "): " + str(pixel) + "\n")
+            
+            # TODO: have a boolean here that knows if we truncated the vertex set early. We wouldn't want this set
+            # TODO: if a valid vertex set, add the data to the excel sheet
+            
+
+            # get the average value of pixels 
+            # for j in range(len(pixels)):            
 
 
 

@@ -9,3 +9,11 @@ Sorts microscope images of cancer cells as aggressive or nonaggressive using Pyt
 
 ## TODO later
 * use a faster algorithm (making use of the hierarchy) to search for the largest contour
+
+
+### Libraries Used
+* OpenCV 3.4.0
+* NumPy
+* MatplotLib
+* Tkinter
+* XlsxWriter

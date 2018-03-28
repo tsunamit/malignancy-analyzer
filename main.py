@@ -14,6 +14,8 @@ print("CREATOR: tsunamit\n" + "OPENCV " + cv.__version__)
 print('RUNTIME: ' + (str)(datetime.datetime.now()))
 print("/\n/\n/\nRUNNING\n/\n/\n/\n")
 
+f = open("log.txt", "w+")
+
 '''
 //////////////////////////////////////
 // Variables
@@ -33,7 +35,7 @@ threshVal = 25
 # test (invasive cell), 6 (complicated), 3 (perfect)
 # 10.tif is the confocal
 # TODO fix image 8. seems to not work well with this
-img_main = cv.imread('img/6.tif')
+img_main = cv.imread('img/10.tif')
 img_main = cv.cvtColor(img_main, cv.COLOR_RGB2GRAY)
 orig = img_main.copy()
 # original image to draw on
@@ -81,38 +83,15 @@ imgContours = cvt.GetContours(dst3)
 largestContourIndex = cvt.GetLargestContour(imgContours)
 largestContourCentroid = cvt.GetCentroid(imgContours[largestContourIndex])
 
-# HACK start moving stuff into this main file... move find contours, get largest contour, and data collection here.
-cvt.GetAndDrawEllipseData(origDraw, orig, largestContourCentroid, startRadius, maxRadius, radiusStep)
+cvt.GetAndDrawEllipseData(f, origDraw, orig, largestContourCentroid, startRadius, maxRadius, radiusStep)
 
 
 
 # Data to draw
 '''
 * trace cell contours
-* draw centroid
-* draw concentric circles
+* draw centroids
 '''
-
-
-
-
-# TESTING: draw the centroid
-'''    
-# get largest contour, then draw the centroid of it
-largest = self.GetLargestContour(contours)
-largestCentroid = self.GetCentroid(contours[largest])
-self.DrawCentroid(dst, largestCentroid)
-print(self.GetShapeFactor(contours[largest]))
-
-# prints out vertices collected the specifies checkradius
-# draws at the specified radius too...
-startRadius = 0
-maxRadius = 1000
-radiusStep = 25
-self.GetEllipseData(dst, procimg, largestCentroid, startRadius, maxRadius, radiusStep)
-'''
-
-
 
 # trace the cell contours
 

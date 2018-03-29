@@ -35,7 +35,7 @@ threshVal = 25
 # test (invasive cell), 6 (complicated), 3 (perfect)
 # 10.tif is the confocal
 # TODO fix image 8. seems to not work well with this
-img_main = cv.imread('img/10.tif')
+img_main = cv.imread('img/2.tif')
 img_main = cv.cvtColor(img_main, cv.COLOR_RGB2GRAY)
 orig = img_main.copy()
 # original image to draw on
@@ -68,9 +68,6 @@ dst3 = cvt.ImFill(dst2)
 // Data Collection and Drawing
 //////////////////////////////////////
 '''
-startRadius = 0
-maxRadius = 1000
-radiusStep = 25
 
 # Data to collect
 '''
@@ -83,7 +80,30 @@ imgContours = cvt.GetContours(dst3)
 largestContourIndex = cvt.GetLargestContour(imgContours)
 largestContourCentroid = cvt.GetCentroid(imgContours[largestContourIndex])
 
-cvt.GetAndDrawEllipseData(f, origDraw, orig, largestContourCentroid, startRadius, maxRadius, radiusStep)
+# get all other centroids, store in an array offBodyCentroids
+offBodyContourIndeces = cvt.GetNonMainbodyContours(imgContours, largestContourIndex)
+offBodyCentroids = []
+for i in range(len(offBodyContourIndeces)):
+    c = cvt.GetCentroid(imgContours[offBodyContourIndeces[i]])
+    offBodyCentroids.append(c)
+
+# get the distance between the offbodies and the central centroid. Store in an array
+distancesFromCentroid = []
+
+for i in range(len(offBodyCentroids)):
+    print ("offpoint: " + str(offBodyCentroids[i]))
+    print("central point: " + str(largestContourCentroid))
+    d = cvt.GetDistanceBetween(largestContourCentroid, offBodyCentroids[i])
+    print(d)
+
+    # add to array
+    distancesFromCentroid.append(d)
+
+# HACK get average dist from centroid
+# HACK get max dist from centroid
+
+
+
 
 
 
@@ -94,9 +114,8 @@ cvt.GetAndDrawEllipseData(f, origDraw, orig, largestContourCentroid, startRadius
 '''
 
 # trace the cell contours
-
 # NOTE: dst3 is the last processed image
-trace = cvt.VisualizeFeatures(dst3, origDraw, startRadius, maxRadius, radiusStep)
+trace = cvt.VisualizeFeatures(dst3, origDraw)
 
 
 

@@ -107,18 +107,6 @@ class CVTools:
 
         return nonMainbodyContourIndeces
 
-    ''' 
-    Draw Centroid
-    ----------------------------------------------------------------------------------------------------------------------
-    given a dst image and contour c, draw a dot at the centroid
-    ''' 
-    def DrawCentroid(self, dst, c):
-
-        # draw all the centroids as circles
-        # c is the tuple which is the location of the centroid
-
-        cv.circle(dst, c, 25, (0, 0, 255), -1)
-        # cv.putText(dst, "center", (c[0] - 20, c[1] - 20), cv.FONT_HERSHEY_SIMPLEX, 6, (255, 0, 0), 10)
 
     '''
     Get Centroid
@@ -191,6 +179,35 @@ class CVTools:
 
         return (4 * (math.pi) * a / math.pow(p, 2) )
 
+
+
+    ''' 
+    Draw Centroid
+    ----------------------------------------------------------------------------------------------------------------------
+    given a dst image and contour c, draw a dot at the centroid
+    ''' 
+    def DrawCentroid(self, dst, c):
+
+        # draw all the centroids as circles
+        # c is the tuple which is the location of the centroid
+
+        cv.circle(dst, c, 25, (0, 0, 255), -1)
+        # cv.putText(dst, "center", (c[0] - 20, c[1] - 20), cv.FONT_HERSHEY_SIMPLEX, 6, (255, 0, 0), 10)
+
+
+    ''' 
+    Draw OffBody Centroid Connections
+    ----------------------------------------------------------------------------------------------------------------------
+    draw a line between two centroids
+    ''' 
+    def DrawOffBodyConnections(self, c1, c2, dst):
+    
+        # centroid c1 is the main body. Start Point
+        # centroid c2 is the off body centroid. End Point
+        lineColor = (255, 255, 255)
+        thickness = 5
+        cv.line(dst, c1, c2, lineColor, thickness)
+    
 
     
     '''

@@ -23,7 +23,9 @@ f = open("log.txt", "w+")
 '''
 # instantiate needed vars
 cvt = CVTools()
-d = Display()
+displayPanel = Display()
+
+print(displayPanel)
 
 # HACK USER CHANGED VARS
 # backgroundSubK must be odd
@@ -35,7 +37,7 @@ threshVal = 25
 # test (invasive cell), 6 (complicated), 3 (perfect)
 # 10.tif is the confocal
 # TODO fix image 8. seems to not work well with this
-img_main = cv.imread('img/2.tif')
+img_main = cv.imread('img/10.tif')
 img_main = cv.cvtColor(img_main, cv.COLOR_RGB2GRAY)
 orig = img_main.copy()
 # original image to draw on
@@ -78,7 +80,7 @@ dst3 = cvt.ImFill(dst2)
 # get contours, largest contour index, and the largest contour centroid
 imgContours = cvt.GetContours(dst3)
 largestContourIndex = cvt.GetLargestContour(imgContours)
-largestContourCentroid = cvt.GetCentroid(imgContours[largestContourIndex])
+mainBodyCentroid = cvt.GetCentroid(imgContours[largestContourIndex])
 
 # get all other centroids, store in an array offBodyCentroids
 offBodyContourIndeces = cvt.GetNonMainbodyContours(imgContours, largestContourIndex)
@@ -92,12 +94,16 @@ distancesFromCentroid = []
 
 for i in range(len(offBodyCentroids)):
     print ("offpoint: " + str(offBodyCentroids[i]))
-    print("central point: " + str(largestContourCentroid))
-    d = cvt.GetDistanceBetween(largestContourCentroid, offBodyCentroids[i])
+    print("central point: " + str(mainBodyCentroid))
+    d = cvt.GetDistanceBetween(mainBodyCentroid, offBodyCentroids[i])
     print(d)
 
     # add to array
     distancesFromCentroid.append(d)
+
+    # visualize the offbody connection to the central location
+    cvt.DrawOffBodyConnections(mainBodyCentroid, offBodyCentroids[i], origDraw)
+
 
 # HACK get average dist from centroid
 # HACK get max dist from centroid
@@ -123,12 +129,12 @@ trace = cvt.VisualizeFeatures(dst3, origDraw)
 //////////////////////////////////////
 // Displaying Images
 //////////////////////////////////////
-'''
+'''	
 # display images
 toDisplay = [orig, dst, dst1, dst2, dst3, trace]
 # TODO turn the other images into BGR so they don't look terrible\
-d.small_grid(toDisplay)
-# d.SingleView ("img", trace)
+displayPanel.small_grid(toDisplay)
+# displayPanel.SingleView ("img", trace)
 
 
 '''

@@ -1,5 +1,20 @@
-* installed cython and kivy -- didn't work
+* distances are calculated via opencv coordinates, likely tied to pixel count
+	-> conversion must be done between real world coordinates (nanometers etc..) to
+	coordinates in order to maintain consistency. 
+	-> should be a simple ratio calculation
 
-* installed matplotlib and wxpython
 
-* decided to go back to using tkinter
+/// Tasks ///
+* Multiple file features
+* Database/csv/xlsx export features
+	-> need ui
+
+/// Data Needed ///
+* image files to write
+* off body centroid count
+* off body centroid individual distance values
+
+
+/// Would be nice to.... ///
+* labeling system to graphically show which centroid corresponds to which one
+

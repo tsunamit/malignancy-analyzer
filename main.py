@@ -2,6 +2,7 @@ import cv2 as cv
 import numpy as np
 import datetime
 import os                       # for path operations
+import output_handler
 from display import Display
 from cvtools import CVTools
 
@@ -16,6 +17,8 @@ print('RUNTIME: ' + (str)(datetime.datetime.now()))
 print("/\n/\n/\nRUNNING\n/\n/\n/\n")
 
 f = open("log.txt", "w+")
+# HACK make new log files each run!!!!
+m_csvFile = open("data.csv", "w+")
 
 
 '''
@@ -122,7 +125,9 @@ for imageNumber in range (len(imgFileNames)):
 
         # visualize the offbody connection to the central location
         cvt.DrawOffBodyConnections(mainBodyCentroid, offBodyCentroids[i], origDraw)
-
+        
+        # draw centroids
+        # cvt.DrawCentroid(origDraw, offBodyCentroids[i])
 
     # HACK get average dist from centroid
     # HACK get max dist from centroid
@@ -140,7 +145,7 @@ for imageNumber in range (len(imgFileNames)):
 
     # trace the cell contours
     # NOTE: dst3 is the last processed image
-    trace = cvt.VisualizeFeatures(dst3, origDraw)
+    trace = cvt.DrawContours(dst3, origDraw, largestContourIndex)
 
 
 
@@ -150,10 +155,13 @@ for imageNumber in range (len(imgFileNames)):
     ////////////////////////////////////////////////////////////////////////////
     '''	
     # display images
-    toDisplay = [orig, dst, dst1, dst2, dst3, trace]
+
+    # toDisplay = [orig, dst, dst1, dst2, dst3, trace]
+
+
     # TODO turn the other images into BGR so they don't look terrible\
     # displayPanel.small_grid(toDisplay)
-    displayPanel.SingleView ("img", trace)
+    # displayPanel.SingleView ("img", trace)
 
 
     '''
@@ -162,3 +170,30 @@ for imageNumber in range (len(imgFileNames)):
 
     * click on matplot img to open up a cv imshow?
     '''
+
+
+
+    '''
+    ////////////////////////////////////////////////////////////////////////////
+    // Write Output to CSV File
+    ////////////////////////////////////////////////////////////////////////////
+    ''' 
+    output_handler.WriteData(m_csvFile, imgFileNames[imageNumber], distancesFromCentroid)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

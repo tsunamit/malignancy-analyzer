@@ -191,7 +191,7 @@ class CVTools:
         # draw all the centroids as circles
         # c is the tuple which is the location of the centroid
 
-        cv.circle(dst, c, 25, (0, 0, 255), -1)
+        cv.circle(dst, c, 10, (255, 255, 255), -1)
         # cv.putText(dst, "center", (c[0] - 20, c[1] - 20), cv.FONT_HERSHEY_SIMPLEX, 6, (255, 0, 0), 10)
 
 
@@ -205,13 +205,13 @@ class CVTools:
         # centroid c1 is the main body. Start Point
         # centroid c2 is the off body centroid. End Point
         lineColor = (255, 255, 255)
-        thickness = 5
+        thickness = 1
         cv.line(dst, c1, c2, lineColor, thickness)
     
 
     
     '''
-    Visaulize Features
+    Visaulize Features TODO change the name of this
     ----------------------------------------------------------------------------------------------------------------------
     OpenCV Find contours method to trace the outline of the cell
     procimg: the processed image ready for contour searching
@@ -219,7 +219,7 @@ class CVTools:
 
     Also draws the centroids and concentric circles that we use to collect data
     '''
-    def VisualizeFeatures(self, procimg, dst):
+    def DrawContours(self, procimg, dst, contourToDraw = -1):
         
         # get contour list
         contours = self.GetContours(procimg)
@@ -240,7 +240,7 @@ class CVTools:
 
 
         # draws the contours found from the processed image onto the original image to display
-        cv.drawContours(dst, contours, -1, (128,255,0), 10)
+        cv.drawContours(dst, contours, contourToDraw, (128,255,0), 5)
 
         return dst
 

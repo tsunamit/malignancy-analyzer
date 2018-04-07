@@ -121,10 +121,14 @@ for imageNumber in range (len(imgFileNames)):
         print(d)
 
         # add to array
-        distancesFromCentroid.append(d)
+        # TODO only if it is not 0,0 ghost centroid
+        if (offBodyCentroids[i] != (0,0)):
+            distancesFromCentroid.append(d)
 
-        # visualize the offbody connection to the central location
-        cvt.DrawOffBodyConnections(mainBodyCentroid, offBodyCentroids[i], origDraw)
+            # visualize the offbody connection to the central location
+            cvt.DrawOffBodyConnections(mainBodyCentroid, offBodyCentroids[i], origDraw)
+
+        
         
         # draw centroids
         # cvt.DrawCentroid(origDraw, offBodyCentroids[i])
@@ -156,12 +160,12 @@ for imageNumber in range (len(imgFileNames)):
     '''	
     # display images
 
-    # toDisplay = [orig, dst, dst1, dst2, dst3, trace]
+    toDisplay = [orig, dst, dst1, dst2, dst3, trace]
 
 
     # TODO turn the other images into BGR so they don't look terrible\
     # displayPanel.small_grid(toDisplay)
-    # displayPanel.SingleView ("img", trace)
+    displayPanel.SingleView ("img", trace)
 
 
     '''

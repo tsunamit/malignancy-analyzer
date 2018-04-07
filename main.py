@@ -160,12 +160,12 @@ for imageNumber in range (len(imgFileNames)):
     '''	
     # display images
 
-    toDisplay = [orig, dst, dst1, dst2, dst3, trace]
+    # toDisplay = [orig, dst, dst1, dst2, dst3, trace]
 
 
     # TODO turn the other images into BGR so they don't look terrible\
     # displayPanel.small_grid(toDisplay)
-    displayPanel.SingleView ("img", trace)
+    # displayPanel.SingleView ("img", trace)
 
 
     '''
@@ -179,11 +179,14 @@ for imageNumber in range (len(imgFileNames)):
 
     '''
     ////////////////////////////////////////////////////////////////////////////
-    // Write Output to CSV File
+    // Write Output
     ////////////////////////////////////////////////////////////////////////////
-    ''' 
+    '''
+    # use output handler to write the data to csv file 
     output_handler.WriteData(m_csvFile, imgFileNames[imageNumber], distancesFromCentroid)
 
+    # save images to output directory
+    output_handler.SaveImage(trace, imgFileNames[imageNumber])
 
 
 

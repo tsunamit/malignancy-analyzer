@@ -4,6 +4,7 @@ handles the output of data to (in this case) a csv file
 ****************************************************************************************************''' 
 
 import csv 		# csv library
+import cv2 as cv
 
 
 '''
@@ -39,5 +40,11 @@ def WriteData(m_csvFile, imgName, offBodyDistances):
 
 	# start new entry with a new line
 
-
-
+'''
+Save Image to output folder: 
+-------------------------
+save image into an output folder to view later
+'''
+def SaveImage(imageToSave, fileName):
+	outputDirPath = "./output/"
+	cv.imwrite((outputDirPath + fileName), imageToSave)

@@ -188,7 +188,9 @@ for imageNumber in range (len(imgFileNames)):
     # save images to output directory
     output_handler.SaveImage(trace, imgFileNames[imageNumber])
 
-
+# close file when done
+f.close()
+m_csvFile.close()
 
 
 

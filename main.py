@@ -19,7 +19,7 @@ print("/\n/\n/\nRUNNING\n/\n/\n/\n")
 f = open("log.txt", "w+")
 # HACK make new log files each run!!!!
 m_csvFile = open("data.csv", "w+")
-
+output_handler.PrepOutputEnvironment()
 
 '''
 ////////////////////////////////////////////////////////////////////////////
@@ -67,7 +67,7 @@ for imageNumber in range (len(imgFileNames)):
 
     '''
     ////////////////////////////////////////////////////////////////////////////
-    // Image Processing 
+    // Image Processing
     ////////////////////////////////////////////////////////////////////////////
     '''
     # blur image
@@ -128,8 +128,8 @@ for imageNumber in range (len(imgFileNames)):
             # visualize the offbody connection to the central location
             cvt.DrawOffBodyConnections(mainBodyCentroid, offBodyCentroids[i], origDraw)
 
-        
-        
+
+
         # draw centroids
         # cvt.DrawCentroid(origDraw, offBodyCentroids[i])
 
@@ -157,7 +157,7 @@ for imageNumber in range (len(imgFileNames)):
     ////////////////////////////////////////////////////////////////////////////
     // Displaying Images
     ////////////////////////////////////////////////////////////////////////////
-    '''	
+    '''
     # display images
 
     # toDisplay = [orig, dst, dst1, dst2, dst3, trace]
@@ -182,7 +182,7 @@ for imageNumber in range (len(imgFileNames)):
     // Write Output
     ////////////////////////////////////////////////////////////////////////////
     '''
-    # use output handler to write the data to csv file 
+    # use output handler to write the data to csv file
     output_handler.WriteData(m_csvFile, imgFileNames[imageNumber], distancesFromCentroid)
 
     # save images to output directory
@@ -191,18 +191,3 @@ for imageNumber in range (len(imgFileNames)):
 # close file when done
 f.close()
 m_csvFile.close()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

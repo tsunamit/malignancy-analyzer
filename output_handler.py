@@ -1,20 +1,22 @@
 '''****************************************************************************************************
-output.py 
+output.py
 handles the output of data to (in this case) a csv file
-****************************************************************************************************''' 
+****************************************************************************************************'''
 
 import csv 		# csv library
 import cv2 as cv
+import os
+import errno
 
 
 '''
-Write Data: 
+Write Data:
 -------------------------
 writes relevant data into csv file
 '''
 def WriteData(m_csvFile, imgName, offBodyDistances):
 	'''
-	m_csvFile : 					m_csvFile to write to 
+	m_csvFile : 					m_csvFile to write to
 	imgName, 						String: name of image
 	offBodyDistances, list<double>: distances from center centroid
 	'''
@@ -41,7 +43,23 @@ def WriteData(m_csvFile, imgName, offBodyDistances):
 	# start new entry with a new line
 
 '''
-Save Image to output folder: 
+Manage/Create Output Folder:
+-------------------------
+Creates the output folder if it doesn't exist. If it exists already don't do anything
+'''
+def PrepOutputEnvironment():
+	try:
+		os.mkdir("./output/")
+		print("OutputHandler: output folder created...")
+	except OSError as e:
+		if e.errno == errno.EEXIST:
+			print("OutputHandler: output folder already created. Doing nothing...")
+		else:
+			raise	# raise exception if it is not the not exist error
+
+
+'''
+Save Image to output folder:
 -------------------------
 save image into an output folder to view later
 '''

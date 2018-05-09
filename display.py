@@ -1,5 +1,10 @@
 import cv2 as cv
 import numpy as np
+
+# saved my life
+import matplotlib
+matplotlib.use("TkAgg")
+
 from matplotlib import pyplot as plt
 
 '''
@@ -33,8 +38,8 @@ class Display:
                 plt.imshow(img[i])
                 plt.xticks([])
                 plt.yticks([])
-            
-            
+
+
             self.Plot()
 
     '''
@@ -50,7 +55,7 @@ class Display:
                 plt.imshow(img[i])
                 plt.xticks([])
                 plt.yticks([])
-        else: 
+        else:
             print('not enough images to compare')
         self.Plot()
 
@@ -65,7 +70,3 @@ class Display:
             cv.namedWindow(winname, cv.WINDOW_KEEPRATIO)
             cv.imshow(winname, img)
             cv.waitKey(0)
-    
-
-            
-    

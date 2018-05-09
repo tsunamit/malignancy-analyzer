@@ -6,7 +6,6 @@ import output_handler
 from display import Display
 from cvtools import CVTools
 
-
 def run():
 
     '''

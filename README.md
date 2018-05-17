@@ -1,13 +1,20 @@
 # Malignancy Detector
-Sorts microscope images of cancer cells as aggressive or nonaggressive using Python and OpenCV. Program to be employed for a specific assay in UCLA bioengineering research lab. Determines malignancy and migratory aptitude from the shape factor of the cell sphere outline.
+Using Python with OpenCV, program processes microscope images of cancer cell colonies and quantifies malignancy based on defined set of parameters from migration patterns and form factor. All output dumped as images to ./output/ and all numerical data saved (per program run) in data.csv. Program created for Seidlits Research Group -- Bioengineering Dept, UCLA.
 
-## Current Tasklist
-* get a set of vertices for circles with a specified radii
+## Features Extracted (Currently)
+* Main cell colony identification and contour trace
+* Main cell colony shape factor (circularity)
+* Migrating particle identification and contour trace
+* Identification and labeling of main cell colony, and migrating cell centroids
+* Migrating cell count
+* Migrating cell distance from main body centroid
+
 
 ## Bugs
 * image 8 imfill process deletes the blob we actually detected.
 
 ## TODO later
+* add distance to contour for migrating particles
 * use a faster algorithm (making use of the hierarchy) to search for the largest contour
 
 
@@ -16,4 +23,3 @@ Sorts microscope images of cancer cells as aggressive or nonaggressive using Pyt
 * NumPy
 * MatplotLib
 * Tkinter
-* XlsxWriter

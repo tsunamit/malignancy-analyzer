@@ -3,7 +3,7 @@ import numpy as np
 import math
 
 '''
-CVTools 
+CVTools
 designed to house any image processing functions. Consolidated the cv2 workhorse functions into "one liners"
 '''
 class CVTools:
@@ -42,16 +42,16 @@ class CVTools:
     '''
     Global Threshold
     ----------------------------------------------------------------------------------------------------------------------
-    Apply gauss threshold 
+    Apply gauss threshold
     '''
     def Thresh(self, img, threshVal):
         ret, dst = cv.threshold(img, threshVal, 255, cv.THRESH_BINARY)
         return dst
-    
+
     '''
     Gaussian Threshold
     ----------------------------------------------------------------------------------------------------------------------
-    Apply gauss threshold 
+    Apply gauss threshold
     '''
     def GThresh(self, img):
         dst = cv.adaptiveThreshold(img, 255, cv.ADAPTIVE_THRESH_GAUSSIAN_C, cv.THRESH_BINARY_INV, 11, 2)
@@ -60,7 +60,7 @@ class CVTools:
     '''
     Floodfill technique
     ----------------------------------------------------------------------------------------------------------------------
-    Fills in holes for a surrounded figure. 
+    Fills in holes for a surrounded figure.
     MUST PROVIDE PREVIOUSLY THRESHOLDED IMAGE!
     '''
     def ImFill (self, img):
@@ -112,7 +112,7 @@ class CVTools:
     Get Centroid
     ----------------------------------------------------------------------------------------------------------------------
     Given a set of contours. Go through each one and return the location of
-    where the centroid should be. We will draw this centroid later. 
+    where the centroid should be. We will draw this centroid later.
     Private
     '''
 
@@ -181,11 +181,11 @@ class CVTools:
 
 
 
-    ''' 
+    '''
     Draw Centroid
     ----------------------------------------------------------------------------------------------------------------------
     given a dst image and contour c, draw a dot at the centroid
-    ''' 
+    '''
     def DrawCentroid(self, dst, c):
 
         # draw all the centroids as circles
@@ -195,21 +195,21 @@ class CVTools:
         # cv.putText(dst, "center", (c[0] - 20, c[1] - 20), cv.FONT_HERSHEY_SIMPLEX, 6, (255, 0, 0), 10)
 
 
-    ''' 
+    '''
     Draw OffBody Centroid Connections
     ----------------------------------------------------------------------------------------------------------------------
     draw a line between two centroids
-    ''' 
+    '''
     def DrawOffBodyConnections(self, c1, c2, dst):
-    
+
         # centroid c1 is the main body. Start Point
         # centroid c2 is the off body centroid. End Point
         lineColor = (255, 255, 255)
-        thickness = 1
+        thickness = 2
         cv.line(dst, c1, c2, lineColor, thickness)
-    
 
-    
+
+
     '''
     Visaulize Features TODO change the name of this
     ----------------------------------------------------------------------------------------------------------------------
@@ -220,7 +220,7 @@ class CVTools:
     Also draws the centroids and concentric circles that we use to collect data
     '''
     def DrawContours(self, procimg, dst, contourToDraw = -1):
-        
+
         # get contour list
         contours = self.GetContours(procimg)
 
@@ -267,12 +267,12 @@ def GetEllipseVertices(self, img, centroid, radius):
     # for a circle make sure the size parameter is (height, width) where h = w
     axes = (radius, radius) # the size of the first and second axes of the ellipse... h = w for a circle
     angleOfRot = 0          # angle of rotation: rotation off the central (vertical) axis of the ellipse
-    startAngle = 0          # start angle of the points -> typically 0 
+    startAngle = 0          # start angle of the points -> typically 0
     endAngle = 360          # end angle of the points -> typically 360
     delta = 1               # the interpolation accuracy of the checks. We check every single angle for this
 
     # get the set of points
-    vertices = cv.ellipse2Poly(centroid, axes, angleOfRot, startAngle, endAngle, delta) 
+    vertices = cv.ellipse2Poly(centroid, axes, angleOfRot, startAngle, endAngle, delta)
 
     return vertices
 
@@ -304,7 +304,7 @@ def GetAndDrawEllipseData(self, log, dst, origimg, centroid, startRadius, maxRad
 
     # i is the radius of the current circle being drawn
     for i in range (startRadius, maxRadius, radiusStepSize):
-        
+
         # draw ellipse
         cv.circle(dst, centroid, i, lineColor, thickness)
 
@@ -314,7 +314,7 @@ def GetAndDrawEllipseData(self, log, dst, origimg, centroid, startRadius, maxRad
         # for each datapoint in the circle we just identified , want to get the intensity of the color at that pixel point
         pixels = []
         isInBounds = True
-        
+
         # for each point in the set of vertices, if in bounds of image, get the pixel intensity
         for j in range (len(vertices)):
             # if calculated vertex is out of bounds (x or y component)
@@ -323,25 +323,15 @@ def GetAndDrawEllipseData(self, log, dst, origimg, centroid, startRadius, maxRad
                 isInBounds = False
                 # stop iterating through this vertex set
                 break
-            else: 
+            else:
                 pixels.append(origimg[vertices[j][0], vertices[j][1]])
                 # NOTE: two lines below get the pixel at position specified and prints to a log file
                 # pixel = origimg[vertices[j][0], vertices[j][1]]
                 # log.write("(" + str(vertices[j][0]) + ", " + str(vertices[j][1]) + "): " + str(pixel) + "\n")
-        
+
         # TODO: have a boolean here that knows if we truncated the vertex set early. We wouldn't want this set
         # TODO: if a valid vertex set, add the data to the excel sheet
-        
-
-        # get the average value of pixels 
-        # for j in range(len(pixels)):            
 
 
-
-
-
-
-
-
-
-
+        # get the average value of pixels
+        # for j in range(len(pixels)):

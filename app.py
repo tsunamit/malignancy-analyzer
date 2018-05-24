@@ -1,24 +1,41 @@
-# import main
-# import cv2 as cv
-# import numpy as np
-# import datetime
-# import os                       # for path operations
-# import output_handler
-from display import Display
-from cvtools import CVTools
-import tkinter as tk
+from tkinter import *
+import main
+import video-proc
 
-root  = tk.Tk()
-frame = tk.Frame(root)
-frame.pack()
+class AppInterface:
 
+    def __init__(self, master):
+        frame = Frame(master)
+        frame.pack()
+
+        # Button 1: analyze one images
+        self.analyzeOneButton = Button(frame, text = "Analyze One", command = self.AnalyzeOne)
+        self.analyzeOneButton.pack(side = TOP)
+
+        # Button 2: analyze all images (after selection)
+        self.analyzeOneButton = Button(frame, text = "Analyze All", command = self.AnalyzeAll)
+        self.analyzeOneButton.pack(side = TOP)
+
+        # Button 3: quit
+        self.quitButton = Button(frame, text = "Quit", fg = "red", command = quit)
+        self.quitButton.pack(side = BOTTOM)
+
+
+    def AnalyzeOne(self):
+        print("Analyzing one ... ")
+
+
+    def AnalyzeAll(self):
+        print("Analyzing all ... ")
+        main.run()
+
+
+'''
 # slider
-slider = tk.Scale(root, from_= 0, to = 42, orient = tk.HORIZONTAL)
-
-# runButton = tk.Button(frame, text = 'START', command = main.run)
-button = tk.Button(frame, text = "QUIT", fg = "red", command = quit)
-# runButton.pack(side = tk.TOP)
-button.pack(side = tk.LEFT)
+slider = tk.Scale(root, from_= 0, to = 255, orient = tk.HORIZONTAL)
 slider.pack()
+'''
 
+root = Tk()
+myApp = AppInterface(root)
 root.mainloop()

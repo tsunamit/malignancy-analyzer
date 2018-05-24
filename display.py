@@ -68,5 +68,13 @@ class Display:
     def SingleView(self, winname, img):
         if img is not None:
             cv.namedWindow(winname, cv.WINDOW_KEEPRATIO)
+
+            cv.createTrackbar("Close Kernel", winname, 0, 100, self.nothing)
+
             cv.imshow(winname, img)
             cv.waitKey(0)
+
+
+    def nothing(self):
+        print("changed")
+        pass

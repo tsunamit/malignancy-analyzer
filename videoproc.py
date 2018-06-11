@@ -1,6 +1,7 @@
 import numpy as np
 import cv2 as cv
 import os
+import errno
 
 filepath = 'data/HK217-RGD-Full 48hr_E4_4.mp4'
 output_path = './videoimg/'

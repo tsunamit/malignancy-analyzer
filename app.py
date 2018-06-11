@@ -1,6 +1,6 @@
 from tkinter import *
 import main
-import video-proc
+
 
 class AppInterface:
 

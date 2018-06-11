@@ -10,6 +10,10 @@ from cvtools import CVTools
 # CONSTANTS
 # HACK USER CHANGED VARS xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 # backgroundSubK must be odd
+
+FOLDER_TO_READ = "./videoimg/"
+# FOLDER_TO_READ = "./img/"
+
 DEF_BACKGROUNDSUB_K = 255
 DEF_CLOSE_K = 25
 DEF_THRESH_VAL = 25
@@ -125,7 +129,7 @@ def run():
     '''
 
     # want to specitfy a path here
-    for subdir, dirs, files in os.walk('./img/'):
+    for subdir, dirs, files in os.walk(FOLDER_TO_READ):
         for fileName in files:
             imgFileNames.append(fileName)
             print (fileName)
@@ -146,7 +150,7 @@ def run():
         # test (invasive cell), 6 (complicated), 3 (perfect)
         # 10.tif is the confocal
         # TODO fix image 8. seems to not work well with this
-        imgFilePath = "img/" + imgFileNames[imageNumber]
+        imgFilePath = FOLDER_TO_READ + imgFileNames[imageNumber]
         img_main = cv.imread(imgFilePath)
 
         AnalyzeOneImage(img_main, imageNumber)

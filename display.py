@@ -28,14 +28,14 @@ class Display:
     -------------------------
     Image display method for 2x3 matrix of images. So 6 mats max
     '''
-    def small_grid(self, img):
-        if len(img) > 6:
+    def small_grid(self, imgs):
+        if len(imgs) > 6:
             print('Too many images. Only accepts max 6')
         else:
             plt.figure(1)
-            for i in range(len(img)):
+            for i in range(len(imgs)):
                 plt.subplot(231+i)
-                plt.imshow(img[i])
+                plt.imshow(imgs[i])
                 plt.xticks([])
                 plt.yticks([])
 

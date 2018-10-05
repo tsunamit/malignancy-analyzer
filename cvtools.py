@@ -233,9 +233,11 @@ class CVTools:
 
             # theoretical next steps:
             # for each of these points, tell me if there is light in this or not.vertices
-            #   now be careful, the background could definitely be light, where we probably would have to verify that there actually is something here
+            #   now be careful, the background could definitely be light, where we probably would have to verify
+            #   that there actually is something here
             # TODO need to make sure we aren't trying to get values for data that is out of bounds
-            # TODO make sure that we aren't drawing (1) contour or (2) centroid or (3) circles until the analysis is finished. Otherwise data will obviously contain that crap
+            # TODO make sure that we aren't drawing (1) contour or (2) centroid or (3) circles until the analysis is finished.
+            # Otherwise data will obviously contain that crap
         #------------------------------------
 
 
@@ -244,6 +246,10 @@ class CVTools:
 
         return dst
 
+    def applyFft(self, img):
+        print('Trying to apply fft')
+        fftData = np.abs(np.fft.fft2(img)) ** 2
+        print(fftData)
 
 
 

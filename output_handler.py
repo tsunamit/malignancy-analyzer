@@ -64,5 +64,6 @@ Save Image to output folder:
 save image into an output folder to view later
 '''
 def SaveImage(imageToSave, fileName):
+	print ("Writing " + fileName + " to Output folder...")
 	outputDirPath = "./output/"
 	cv.imwrite((outputDirPath + fileName), imageToSave)

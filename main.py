@@ -62,48 +62,52 @@ def AnalyzeOneImage(img_main, imageNumber = 0):
     // Data Collection and Drawing
     ////////////////////////////////////////////////////////////////////////////
     '''
-    cvt.applyFft(dst3)
+    # cvt.applyFft(dst3)
 
-    # # get contours, largest contour index, and the largest contour centroid
-    # imgContours = cvt.GetContours(dst3)
-    # largestContourIndex = cvt.GetLargestContour(imgContours)
-    # mainBodyCentroid = cvt.GetCentroid(imgContours[largestContourIndex])
+    # get contours, largest contour index, and the largest contour centroid
+    imgContours = cvt.GetContours(dst3)
+    largestContourIndex = cvt.GetLargestContour(imgContours)
+    mainBodyCentroid = cvt.GetCentroid(imgContours[largestContourIndex])
 
-    # # get all other centroids, store in an array offBodyCentroids
-    # offBodyContourIndeces = cvt.GetNonMainbodyContours(imgContours, largestContourIndex)
-    # offBodyCentroids = []
-    # for i in range(len(offBodyContourIndeces)):
-    #     c = cvt.GetCentroid(imgContours[offBodyContourIndeces[i]])
-    #     offBodyCentroids.append(c)
+    # get all other centroids, store in an array offBodyCentroids
+    offBodyContourIndeces = cvt.GetNonMainbodyContours(imgContours, largestContourIndex)
+    offBodyCentroids = []
+    for i in range(len(offBodyContourIndeces)):
+        c = cvt.GetCentroid(imgContours[offBodyContourIndeces[i]])
+        offBodyCentroids.append(c)
 
-    # # get the distance between the offbodies and the central centroid. Store in an array
-    # distancesFromCentroid = []
-    #
-    # for i in range(len(offBodyCentroids)):
-    #     print ("offpoint: " + str(offBodyCentroids[i]))
-    #     print("central point: " + str(mainBodyCentroid))
-    #     d = cvt.GetDistanceBetween(mainBodyCentroid, offBodyCentroids[i])
-    #     print(d)
-    #
-    #     # add to array
-    #     # TODO only if it is not 0,0 ghost centroid
-    #     if (offBodyCentroids[i] != (0,0)):
-    #         distancesFromCentroid.append(d)
-    #
-    #         # visualize the offbody connection to the central location
-    #         cvt.DrawOffBodyConnections(mainBodyCentroid, offBodyCentroids[i], origDraw)
-    #
-    #     # draw centroids
-    #     # cvt.DrawCentroid(origDraw, offBodyCentroids[i])
-    #
-    # # trace the cell contours
-    #
-    # # NOTE: dst3 is the last processed image
-    # trace = cvt.DrawContours(dst3, origDraw, largestContourIndex)
-    # # trace = cvt.DrawContours(dst3, origDraw)
+    # get the distance between the offbodies and the central centroid. Store in an array
+    distancesFromCentroid = []
 
-    # # displayPanel.SingleView("main", trace)
-    # displayPanel.small_grid([orig, dst1, dst2, dst3, origDraw])
+    for i in range(len(offBodyCentroids)):
+        print ("offpoint: " + str(offBodyCentroids[i]))
+        print("central point: " + str(mainBodyCentroid))
+        d = cvt.GetDistanceBetween(mainBodyCentroid, offBodyCentroids[i])
+        print(d)
+
+        # add to array
+        # TODO only if it is not 0,0 ghost centroid
+        if (offBodyCentroids[i] != (0,0)):
+            distancesFromCentroid.append(d)
+
+            # visualize the offbody connection to the central location
+            cvt.DrawOffBodyConnections(mainBodyCentroid, offBodyCentroids[i], origDraw)
+
+        # draw centroids
+        # cvt.DrawCentroid(origDraw, offBodyCentroids[i])
+
+    # trace the cell contours
+
+    # NOTE: dst3 is the last processed image
+    trace = cvt.DrawContours(dst3, origDraw, largestContourIndex)
+    # trace = cvt.DrawContours(dst3, origDraw)
+
+    boxed = cvt.boxLargestContour(orig, imgContours[largestContourIndex])
+
+
+    # displayPanel.SingleView("main", trace)
+    displayPanel.SingleView("main", boxed)
+    # displayPanel.small_grid([orig, dst1, dst2, dst3, boxed])
 
     '''
     ////////////////////////////////////////////////////////////////////////////
@@ -116,7 +120,7 @@ def AnalyzeOneImage(img_main, imageNumber = 0):
     # #
     # # # save images to output directory
     # output_handler.SaveImage(trace, imgFileNames[imageNumber])
-
+    
 def run():
 
     SplashScreen()

@@ -60,6 +60,7 @@ class Display:
         self.Plot()
 
 
+
     '''
     Single Image Display
     -------------------------

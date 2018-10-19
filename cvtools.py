@@ -165,6 +165,36 @@ class CVTools:
         # returns largest contours
         return largest
 
+    '''
+    Enclose Largest Contours with Bounding Box
+    ----------------------------------------------------------------------------
+    '''
+    def boxLargestContour(self, img, c):
+        (x,y),radius = cv.minEnclosingCircle(c)
+        center = (int(x), int(y))
+        radius = int(radius)
+        vertices = self.getEllipseVertices(center, radius)
+        rx, ry, rw, rh = cv.boundingRect(vertices)
+        # cv.rectangle(img, (rx, ry), (rx+rw, ry+rh), (255,255,255), 2)
+        img = self.cropToBox(img, rx, rw, ry, rh)
+        return img
+
+    '''
+    Crop to box
+    ----------------------------------------------------------------------------
+    '''
+    # x: left of box
+    # dx: width of box
+    # y: top of box
+    # dy: height of box
+    def cropToBox(self, img, x, dx, y, dy):
+        x = int(x)
+        y = int(y)
+        dx = int(dx)
+        dy = int(dy)
+        cropImg = img[y:y+dy, x:x+dx]
+        return cropImg
+
 
     '''
     Get Shape Factor
@@ -252,6 +282,26 @@ class CVTools:
         print(fftData)
 
 
+    '''
+    Get Ellipse Vertices
+    -----------------------------------------------------------
+    Given a centroid, calculate points on an ellipse of a particular radii
+    Private
+    '''
+    def getEllipseVertices(self, centroid, radius):
+        # want to use ellipse2poly method
+        # for a circle make sure the size parameter is (height, width) where h = w
+        axes = (radius, radius) # the size of the first and second axes of the ellipse... h = w for a circle
+        angleOfRot = 0          # angle of rotation: rotation off the central (vertical) axis of the ellipse
+        startAngle = 0          # start angle of the points -> typically 0
+        endAngle = 360          # end angle of the points -> typically 360
+        delta = 1               # the interpolation accuracy of the checks. We check every single angle for this
+
+        # get the set of points
+        vertices = cv.ellipse2Poly(centroid, axes, angleOfRot, startAngle, endAngle, delta)
+
+        return vertices
+
 
 
 
@@ -261,26 +311,6 @@ class CVTools:
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 '''
 
-
-'''
-Get Ellipse Vertices
------------------------------------------------------------
-Given a centroid, calculate points on an ellipse of a particular radii
-Private
-'''
-def GetEllipseVertices(self, img, centroid, radius):
-    # want to use ellipse2poly method
-    # for a circle make sure the size parameter is (height, width) where h = w
-    axes = (radius, radius) # the size of the first and second axes of the ellipse... h = w for a circle
-    angleOfRot = 0          # angle of rotation: rotation off the central (vertical) axis of the ellipse
-    startAngle = 0          # start angle of the points -> typically 0
-    endAngle = 360          # end angle of the points -> typically 360
-    delta = 1               # the interpolation accuracy of the checks. We check every single angle for this
-
-    # get the set of points
-    vertices = cv.ellipse2Poly(centroid, axes, angleOfRot, startAngle, endAngle, delta)
-
-    return vertices
 
 
 

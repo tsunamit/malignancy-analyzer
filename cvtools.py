@@ -170,13 +170,36 @@ class CVTools:
     ----------------------------------------------------------------------------
     '''
     def boxLargestContour(self, img, c):
+        # given the center of the min bounding circle and the centroid of the
+        # object, return the min bounding box where these two centers coincide
+
+        # Get dx and dy between centroid and circle_center. This indicates how
+        # your box needs to expand to allow the points to coincide
+
+        # NOTE: what happens if you cannot allow the two to coincide since it is
+        # by the corner or edge of an image. For now, just take the min bounding
+        # box around the object, and let it be different from centroid
+
         (x,y),radius = cv.minEnclosingCircle(c)
-        center = (int(x), int(y))
-        radius = int(radius)
-        vertices = self.getEllipseVertices(center, radius)
-        rx, ry, rw, rh = cv.boundingRect(vertices)
-        # cv.rectangle(img, (rx, ry), (rx+rw, ry+rh), (255,255,255), 2)
-        img = self.cropToBox(img, rx, rw, ry, rh)
+        centroid_x, centroid_y = self.GetCentroid(c);
+        circle_center = (int(x), int(y))
+
+        # measures x and y offsets from centroid
+        offset_dx = centroid_x - circle_center[0]
+        offset_dy = centroid_y - circle_center[1]
+
+        # Use the larger offset to add to the radius, then apply that radius
+        # using the centroid as the center to generate circle points, then
+        # generate the bounding box
+        image_radius = radius + offset_dx \
+                        if offset_dx > offset_dy \
+                        else radius + offset_dy
+        bounding_circle_vertices = self.get_ellipse_vertices(
+                                    (centroid_x, centroid_y),
+                                    int(image_radius))
+        box_x, box_y, box_width, box_height = cv.boundingRect(
+                                                bounding_circle_vertices)
+        img = self.cropToBox(img, box_x, box_width, box_y, box_height)
         return img
 
     '''
@@ -278,8 +301,7 @@ class CVTools:
 
     def applyFft(self, img):
         print('Trying to apply fft')
-        fftData = np.abs(np.fft.fft2(img)) ** 2
-        print(fftData)
+        return np.abs(np.fft.fft2(img)) ** 2
 
 
     '''
@@ -288,7 +310,7 @@ class CVTools:
     Given a centroid, calculate points on an ellipse of a particular radii
     Private
     '''
-    def getEllipseVertices(self, centroid, radius):
+    def get_ellipse_vertices(self, centroid, radius):
         # want to use ellipse2poly method
         # for a circle make sure the size parameter is (height, width) where h = w
         axes = (radius, radius) # the size of the first and second axes of the ellipse... h = w for a circle
@@ -345,7 +367,7 @@ def GetAndDrawEllipseData(self, log, dst, origimg, centroid, startRadius, maxRad
         cv.circle(dst, centroid, i, lineColor, thickness)
 
         # collect ellipse data
-        vertices = self.GetEllipseVertices(origimg, centroid, i)
+        vertices = self.get_ellipse_vertices(origimg, centroid, i)
 
         # for each datapoint in the circle we just identified , want to get the intensity of the color at that pixel point
         pixels = []

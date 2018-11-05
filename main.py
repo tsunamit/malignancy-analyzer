@@ -104,6 +104,11 @@ def AnalyzeOneImage(img_main, imageNumber = 0):
 
     boxed = cvt.boxLargestContour(orig, imgContours[largestContourIndex])
 
+    # Apply fft to boxed
+    # fftData = cvt.applyFft(boxed)
+    # fftImg = displayPanel.retrieveFftImg(fftData)
+
+
 
     # displayPanel.SingleView("main", trace)
     displayPanel.SingleView("main", boxed)
@@ -119,8 +124,8 @@ def AnalyzeOneImage(img_main, imageNumber = 0):
     # # output_handler.WriteData(m_csvFile, imgFileNames[imageNumber], distancesFromCentroid)
     # #
     # # # save images to output directory
-    # output_handler.SaveImage(trace, imgFileNames[imageNumber])
-    
+    # output_handler.SaveImage(fftImg, imgFileNames[imageNumber])
+
 def run():
 
     SplashScreen()

@@ -23,6 +23,14 @@ class Display:
         plt.subplots_adjust(wspace = 0, hspace = 0, left = 0, right = 1, bottom = 0.0, top = 1.0)
         plt.show()
 
+    def retrieveFftImg(self, fdata):
+        fshift = np.fft.fftshift(fdata)
+        return 20*np.log(np.abs(fshift))
+
+
+
+
+
     '''
     Show Small Grid
     -------------------------

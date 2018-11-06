@@ -80,10 +80,10 @@ def AnalyzeOneImage(img_main, imageNumber = 0):
     distancesFromCentroid = []
 
     for i in range(len(offBodyCentroids)):
-        print ("offpoint: " + str(offBodyCentroids[i]))
-        print("central point: " + str(mainBodyCentroid))
+        # print ("offpoint: " + str(offBodyCentroids[i]))
+        # print("central point: " + str(mainBodyCentroid))
         d = cvt.GetDistanceBetween(mainBodyCentroid, offBodyCentroids[i])
-        print(d)
+        # print(d)
 
         # add to array
         # TODO only if it is not 0,0 ghost centroid
@@ -102,16 +102,16 @@ def AnalyzeOneImage(img_main, imageNumber = 0):
     trace = cvt.DrawContours(dst3, origDraw, largestContourIndex)
     # trace = cvt.DrawContours(dst3, origDraw)
 
-    boxed = cvt.boxLargestContour(orig, imgContours[largestContourIndex])
-
+    boxed = cvt.boxLargestContour(trace, imgContours[largestContourIndex])
+    orig_boxed = cvt.boxLargestContour(orig, imgContours[largestContourIndex])
     # Apply fft to boxed
-    # fftData = cvt.applyFft(boxed)
-    # fftImg = displayPanel.retrieveFftImg(fftData)
+    fftData = cvt.applyFft(orig_boxed)
+    fftImg = (255 - displayPanel.retrieveFftImg(fftData))
 
 
 
     # displayPanel.SingleView("main", trace)
-    displayPanel.SingleView("main", boxed)
+    # displayPanel.SingleView("main", boxed)
     # displayPanel.small_grid([orig, dst1, dst2, dst3, boxed])
 
     '''
@@ -119,12 +119,13 @@ def AnalyzeOneImage(img_main, imageNumber = 0):
     // Write Output
     ////////////////////////////////////////////////////////////////////////////
     '''
-    # #
-    # # # use output handler to write the data to csv file
-    # # output_handler.WriteData(m_csvFile, imgFileNames[imageNumber], distancesFromCentroid)
-    # #
-    # # # save images to output directory
-    # output_handler.SaveImage(fftImg, imgFileNames[imageNumber])
+    #
+    # # use output handler to write the data to csv file
+    # output_handler.WriteData(m_csvFile, imgFileNames[imageNumber], distancesFromCentroid)
+    #
+    # # save images to output directory
+    output_handler.SaveImage(fftImg, imgFileNames[imageNumber])
+    output_handler.SaveImage(boxed, 'box' + imgFileNames[imageNumber])
 
 def run():
 

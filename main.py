@@ -106,6 +106,7 @@ def AnalyzeOneImage(img_main, imageNumber = 0):
     orig_boxed = cvt.boxLargestContour(orig, imgContours[largestContourIndex])
     # Apply fft to boxed
     fftData = cvt.applyFft(orig_boxed)
+    cvt.fold_quadrants(fftData)
     fftImg = (255 - displayPanel.retrieveFftImg(fftData))
 
 

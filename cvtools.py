@@ -303,7 +303,14 @@ class CVTools:
         print('Trying to apply fft')
         return np.abs(np.fft.fft2(img)) ** 2
 
-
+    def fold_quadrants(self, matrix):
+        print("Folding quadrants")
+        print("Getting size of matrix: ", matrix.shape)
+        # fold quadrants here
+        # quad1 =
+        # quad2 =
+        # quad3 =
+        # quad4 = 
     '''
     Get Ellipse Vertices
     -----------------------------------------------------------

@@ -3,9 +3,10 @@ output/
 videoimg/
 
 # Byte-compiled / optimized / DLL files
-__pycache__/
+__pycache__
 *.py[cod]
 *$py.class
+*.cpyton-36.pyc
 
 # C extensions
 *.so

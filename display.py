@@ -27,10 +27,6 @@ class Display:
         fshift = np.fft.fftshift(fdata)
         return 20*np.log(np.abs(fshift))
 
-
-
-
-
     '''
     Show Small Grid
     -------------------------

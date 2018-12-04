@@ -305,12 +305,22 @@ class CVTools:
 
     def fold_quadrants(self, matrix):
         print("Folding quadrants")
-        print("Getting size of matrix: ", matrix.shape)
+
+        matrix_shape = matrix.shape
+        print("Getting size of matrix: ", matrix_shape)
+
+        pivot_point = int(matrix_shape[0] / 2)
+
         # fold quadrants here
-        # quad1 =
-        # quad2 =
-        # quad3 =
-        # quad4 = 
+        quad1 = matrix[:pivot_point:, pivot_point:].copy()
+        quad2 = matrix[pivot_point:, pivot_point:].copy()
+        quad3 = matrix[pivot_point:, :pivot_point].copy()
+        quad4 = matrix[:pivot_point:, :pivot_point].copy()
+
+        return (quad1, quad2, quad3, quad4)
+
+
+
     '''
     Get Ellipse Vertices
     -----------------------------------------------------------

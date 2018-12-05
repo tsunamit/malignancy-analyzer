@@ -106,12 +106,12 @@ def AnalyzeOneImage(img_main, imageNumber = 0):
     orig_boxed = cvt.boxLargestContour(orig, imgContours[largestContourIndex])
     # Apply fft to boxed
     fftData = cvt.applyFft(orig_boxed)
-    fftImg = (255 - displayPanel.retrieveFftImg(fftData))
+
+    fftImg = displayPanel.retrieveFftImg(fftData)
+    # Inverted version of fft (black with white dots)
+    # fftImg = (255 - displayPanel.retrieveFftImg(fftData))
+
     quads = cvt.fold_quadrants(fftImg)
-
-
-    
-
 
     # displayPanel.SingleView("main", trace)
     # displayPanel.SingleView("main", boxed)
@@ -172,7 +172,7 @@ def run():
         # 10.tif is the confocal
         # TODO fix image 8. seems to not work well with this
         imgFilePath = FOLDER_TO_READ + imgFileNames[imageNumber]
-        img_main = cvt.imread(imgFilePath)
+        img_main = cv.imread(imgFilePath)
         AnalyzeOneImage(img_main, imageNumber)
 
 

@@ -181,7 +181,7 @@ class CVTools:
         # box around the object, and let it be different from centroid
 
         (x,y),radius = cv.minEnclosingCircle(c)
-        centroid_x, centroid_y = self.GetCentroid(c);
+        centroid_x, centroid_y = self.GetCentroid(c)
         circle_center = (int(x), int(y))
 
         # measures x and y offsets from centroid
@@ -316,6 +316,12 @@ class CVTools:
         quad2 = matrix[pivot_point:, pivot_point:].copy()
         quad3 = matrix[pivot_point:, :pivot_point].copy()
         quad4 = matrix[:pivot_point:, :pivot_point].copy()
+
+        # Fold left half over right half. Then fold the bottom to the top.
+        quad3 = np.fliplr(quad3)        
+        quad4 = np.fliplr(quad4)
+        quad2 = np.flipud(quad2)
+        quad3 = np.flipud(quad3)
 
         return (quad1, quad2, quad3, quad4)
 

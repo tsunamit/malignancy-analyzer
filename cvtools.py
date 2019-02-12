@@ -91,7 +91,7 @@ class CVTools:
     def GetContours(self, procimg):
         # finds all the contours, currently without using Canny edge detection. Uses RETR Tree hierarchy
         edge, contours, hierarchy = cv.findContours(procimg, cv.RETR_TREE, cv.CHAIN_APPROX_SIMPLE)
-        return contours
+        return np.array(contours)
 
     '''
     Get Non Mainbody Contours
@@ -105,7 +105,7 @@ class CVTools:
             if (i != biggestContourIndex):
                 nonMainbodyContourIndeces.append(i)
 
-        return nonMainbodyContourIndeces
+        return np.array(nonMainbodyContourIndeces)
 
 
     '''
@@ -158,8 +158,10 @@ class CVTools:
         largest = 0
 
         for i in range(len(contours)):
-            # compare to the largest contour, and make sure that we don't accidentally grab the whole box!
-            if (cv.contourArea(contours[i]) > cv.contourArea(contours[largest]) and cv.contourArea(contours[i]) < 4000000):
+            # compare to the largest contour, and make sure that we don't
+            # accidentally grab the whole box!
+            if (cv.contourArea(contours[i]) > cv.contourArea(contours[largest]) 
+                and cv.contourArea(contours[i]) < 4000000):
                 largest = i
 
         # returns largest contours

@@ -47,9 +47,9 @@ Manage/Create Output Folder:
 -------------------------
 Creates the output folder if it doesn't exist. If it exists already don't do anything
 '''
-def PrepOutputEnvironment():
+def prep_output_environment(output_path):
 	try:
-		os.mkdir("./output/")
+		os.mkdir(output_path)
 		print("OutputHandler: output folder created...")
 	except OSError as e:
 		if e.errno == errno.EEXIST:
@@ -63,7 +63,6 @@ Save Image to output folder:
 -------------------------
 save image into an output folder to view later
 '''
-def SaveImage(imageToSave, fileName):
-	print ("Writing " + fileName + " to Output folder...")
-	outputDirPath = "./output/"
-	cv.imwrite((outputDirPath + fileName), imageToSave)
+def save_image(image_to_save, file_name, output_path):
+	print ("Writing {} to {}".format(file_name, output_path))
+	cv.imwrite((output_path + file_name), image_to_save)

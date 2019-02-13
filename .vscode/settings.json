@@ -1,5 +1,5 @@
 {
-    "python.pythonPath": "C:\\Users\\rvtsa\\AppData\\Local\\Programs\\Python\\Python36\\python.exe",
+    "python.pythonPath": "/usr/local/bin/python3",
     "python.linting.pylintPath": "/Library/Frameworks/Python.framework/Versions/3.6/bin/pylint",
     "python.linting.pylintEnabled": true,
     "python.linting.enabled": true,

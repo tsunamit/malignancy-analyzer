@@ -256,7 +256,6 @@ class CVTools:
     draw a line between two centroids
     '''
     def DrawOffBodyConnections(self, c1, c2, dst):
-
         # centroid c1 is the main body. Start Point
         # centroid c2 is the off body centroid. End Point
         lineColor = (255, 255, 255)

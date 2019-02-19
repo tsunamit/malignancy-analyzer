@@ -8,6 +8,15 @@ import cv2 as cv
 import os
 import errno
 
+	
+# Write data matrix to csv file f
+def write_to_csv(f, data):
+	print("Writing data to csv file")
+	print("...")
+	writer = csv.writer(f)
+	writer.writerows(data)
+	print("Done!")
+
 
 '''
 Write Data:

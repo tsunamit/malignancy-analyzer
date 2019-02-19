@@ -26,12 +26,10 @@ image_of_interest = None
 def main():
     splash_screen()
 
-    # TODO: create an output log
-    # f = open("log.txt", "w+")
-    # m_csvFile = open("data.csv", "w+")
-
     # Prep output environment
     output_handler.prep_output_environment(START_TIME)
+    output_csv_name = "data.csv"
+    output_csv_fd = open("{}{}".format(OUTPUT_PATH, output_csv_name), "w+")
 
     # Read folder image file names into array
     for subdir, dirs, files in os.walk(FOLDER_TO_READ):
@@ -46,20 +44,14 @@ def main():
         return
 
     # Run analysis on each image
+    img_analysis_data = []
     for i in range (len(img_file_names)):
         path = FOLDER_TO_READ + img_file_names[i]
         img_main = cv.imread(path)
-        analyze_image(img_main, img_file_names[i])
+        img_analysis_data.append(analyze_image(img_main, img_file_names[i]))
+    output_handler.write_to_csv(output_csv_fd, img_analysis_data)
+    return (0)
 
-def splash_screen():
-    print("CREATOR: tsunamit\n" + "OPENCV " + cv.__version__)
-    print('RUNTIME: ' + (str)(datetime.datetime.now()))
-    print("/\n/\n/\nRUNNING\n/\n/\n/\n")
-
-# Designed to show detailed analysis of preprocessing
-def show_preprocessing_of_image(img_path):
-    img = cv.imread(img_path)
-    analyze_image(img, img_path, show_preprocessing = True)
 
 def analyze_image(img_main, img_name, show_preprocessing = False):
     img_main = cv.cvtColor(img_main, cv.COLOR_RGB2GRAY) # Import image
@@ -74,27 +66,29 @@ def analyze_image(img_main, img_name, show_preprocessing = False):
 
     # Data Collection and Drawing
     contours = []
-    index_of_cell_sphere_contour = None
+    i_of_cell_sphere = None
     cell_sphere_shape_factor = None # circularity of cell sphere
     mig_contour_i_list = []
     mig_contours = []
     mig_centroids = []
     dists_from_cell_sphere = []
+    num_mig_clusters = None
     avg_mig_cluster_size = None     # Average migration cluster size
     max_mig_dist = None             # Max migration distance
 
     contours = cvt.GetContours(img_preproc)
-    index_of_cell_sphere_contour = cvt.GetLargestContour(contours)
-    cell_sphere_centroid = cvt.GetCentroid(contours[index_of_cell_sphere_contour])
+    i_of_cell_sphere = cvt.GetLargestContour(contours)
+    cell_sphere_centroid = cvt.GetCentroid(contours[i_of_cell_sphere])
 
     # Get all other centroids, store in an array mig_centroids
     mig_contour_i_list = cvt.GetNonMainbodyContours(contours, 
-        index_of_cell_sphere_contour)
+        i_of_cell_sphere)
     for i in mig_contour_i_list:
         mig_contours.append(contours[i])
     for mig_contour in mig_contours:
         c = cvt.GetCentroid(mig_contour)
         mig_centroids.append(c)
+    num_mig_clusters = len(mig_contours)
 
     # get the distance between the offbodies and the central centroid. Store in
     # an array
@@ -105,10 +99,15 @@ def analyze_image(img_main, img_name, show_preprocessing = False):
         dists_from_cell_sphere.append(d)
         cvt.DrawOffBodyConnections(cell_sphere_centroid, 
             mig_centroids[i], orig_draw)
+
+    # Get shape factor
+    cell_sphere_shape_factor = \
+        cvt.get_shape_factor(contours[i_of_cell_sphere])
+
     
     # Create output images
     trace = None    # Shows contours traced and paths to migrating particles
-    trace = cvt.DrawContours(img_preproc, orig_draw, index_of_cell_sphere_contour)
+    trace = cvt.DrawContours(img_preproc, orig_draw, i_of_cell_sphere)
     # trace = cvt.DrawContours(img_preproc, trace)
 
     # Show images with matplotlib
@@ -118,11 +117,47 @@ def analyze_image(img_main, img_name, show_preprocessing = False):
         return
         # display_panel.SingleView("main", boxed)
 
+    # Format output to csv
+    # ====================================================
+    data = [num_mig_clusters, cell_sphere_shape_factor] 
+    classification = get_classifier_from_filename(img_name)
+    return format_obs_row(img_name, data, classification) 
+
     # Write Output
     # ====================================================
-    # output_handler.save_image(trace, 'trace-' + img_file_names[image_number], OUTPUT_PATH)
-    # output_handler.save_image(img_preproc, 'proc-' + img_file_names[image_number], OUTPUT_PATH)
-    output_handler.save_image(trace, 'trace-{}'.format(img_name), OUTPUT_PATH)
+    # output_handler.save_image(trace, 'trace-{}'.format(img_name), OUTPUT_PATH)
+
+# Formats a row of data for an observation. 
+# out_f: fd  		csv file to write to 
+# img_tag: string	img title for reference
+# data: [] 			input values, 
+# output_class int  class this observation belongs to
+def format_obs_row(img_tag, data, output_class):
+    row = []
+    row.append(img_tag)	
+    row = row + data
+    row.append(output_class)
+    return row
+
+# Designed to show detailed analysis of preprocessing
+def show_preprocessing_of_image(img_path):
+    img = cv.imread(img_path)
+    analyze_image(img, img_path, show_preprocessing = True)
+
+# From the filename, return the class of cell
+# 1. mesenchymal
+# 2. proneural
+def get_classifier_from_filename(img_name):
+    if ("m" in img_name):
+        return 1
+    if ("p" in img_name):
+        return 2
+
+def splash_screen():
+    print("CREATOR: tsunamit\n" + "OPENCV " + cv.__version__)
+    print('RUNTIME: ' + (str)(datetime.datetime.now()))
+    print("/\n/\n/\nRUNNING\n/\n/\n/\n")
+
 
 if __name__ == "__main__":
     main()

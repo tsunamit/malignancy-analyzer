@@ -226,12 +226,10 @@ class CVTools:
     ----------------------------------------------------------------------------------------------------------------------
     Given a contour, return shape factor
     '''
-    def GetShapeFactor (self, c):
+    def get_shape_factor (self, c):
         # 4(pi)(Area)/(Perimeter)^2
         a = cv.contourArea(c)
         p = cv.arcLength(c, True)
-        print (a)
-
         return (4 * (math.pi) * a / math.pow(p, 2) )
 
 

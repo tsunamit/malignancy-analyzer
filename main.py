@@ -54,6 +54,7 @@ def main():
 
 
 def analyze_image(img_main, img_name, show_preprocessing = False):
+    print("Processing {}...".format(img_name))
     img_main = cv.cvtColor(img_main, cv.COLOR_RGB2GRAY) # Import image
     orig_draw = img_main.copy()      # Original image to draw on
     
@@ -99,6 +100,8 @@ def analyze_image(img_main, img_name, show_preprocessing = False):
         dists_from_cell_sphere.append(d)
         cvt.DrawOffBodyConnections(cell_sphere_centroid, 
             mig_centroids[i], orig_draw)
+    max_mig_dist = max(dists_from_cell_sphere)
+    avg_mig_cluster_size = np.mean(cvt.get_contour_areas(mig_contours))
 
     # Get shape factor
     cell_sphere_shape_factor = \
@@ -119,8 +122,10 @@ def analyze_image(img_main, img_name, show_preprocessing = False):
 
     # Format output to csv
     # ====================================================
-    data = [num_mig_clusters, cell_sphere_shape_factor] 
+    data = [num_mig_clusters, cell_sphere_shape_factor, 
+            max_mig_dist, avg_mig_cluster_size] 
     classification = get_classifier_from_filename(img_name)
+    print("Done!")
     return format_obs_row(img_name, data, classification) 
 
     # Write Output

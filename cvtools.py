@@ -148,6 +148,11 @@ class CVTools:
 
         return distance
 
+    def get_contour_areas(self, contours):
+        a = []
+        for c in contours:
+            a.append(cv.contourArea(c))
+        return np.array(a)
 
     '''
     Get Largest Contour
